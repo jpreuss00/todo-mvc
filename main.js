@@ -14,12 +14,18 @@ class TodoListModel {
     add(todo) {
         this.todoListe.push(todo);
     }
-} 
+    delete(todo) {
+        var idx = this.todoListe.indexOf(todo);
+        console.log(idx);
+        // ... todo
+    }
+}
 
 class TodoListController {
     constructor(model, view) {
         this.model = model;
         this.view = view;
+        this.view.setDeleteItemHandler((item) => this.deleteTodo(item));
     }
 
     addTodo(text) {
@@ -27,12 +33,21 @@ class TodoListController {
         this.model.add(newTodo);
         this.view.renderTodoList();
     }
+
+    deleteTodo(todo) {
+        this.model.delete(todo); 
+    }
 }
 
 class TodoListView {
     constructor(model) {
         this.model = model;
+        this.deleteItemHandler = null;
         this.renderTodoList();
+    }
+
+    setDeleteItemHandler(func) {
+        this.deleteItemHandler = func;
     }
 
     renderTodoList() {
@@ -47,11 +62,15 @@ class TodoListView {
             for (var i = 0; i < this.model.todoListe.length; i++ ) {
                 var todoItem = this.model.todoListe[i];
 
-                // newtodo is a li with a span with text 
                 var newTodoEntry = document.createElement("li")
                 var spanNode = document.createElement("span")
                 spanNode.appendChild(document.createTextNode(todoItem.text))
                 newTodoEntry.appendChild(spanNode);
+
+                var deleteButton = document.createElement("button")
+                deleteButton.appendChild(document.createTextNode(" - "))
+                deleteButton.addEventListener("click", () => this.deleteItemHandler(todoItem) )
+                newTodoEntry.appendChild(deleteButton);
 
                 // add the new todo entry to the list
                 container.appendChild(newTodoEntry);

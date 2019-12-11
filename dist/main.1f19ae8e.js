@@ -228,6 +228,12 @@ function () {
     value: function add(todo) {
       this.todoListe.push(todo);
     }
+  }, {
+    key: "delete",
+    value: function _delete(todo) {
+      var idx = this.todoListe.indexOf(todo);
+      console.log(idx); // ... todo
+    }
   }]);
 
   return TodoListModel;
@@ -237,10 +243,15 @@ var TodoListController =
 /*#__PURE__*/
 function () {
   function TodoListController(model, view) {
+    var _this = this;
+
     _classCallCheck(this, TodoListController);
 
     this.model = model;
     this.view = view;
+    this.view.setDeleteItemHandler(function (item) {
+      return _this.deleteTodo(item);
+    });
   }
 
   _createClass(TodoListController, [{
@@ -249,6 +260,11 @@ function () {
       var newTodo = new Todo(text);
       this.model.add(newTodo);
       this.view.renderTodoList();
+    }
+  }, {
+    key: "deleteTodo",
+    value: function deleteTodo(todo) {
+      this.model.delete(todo);
     }
   }]);
 
@@ -262,12 +278,20 @@ function () {
     _classCallCheck(this, TodoListView);
 
     this.model = model;
+    this.deleteItemHandler = null;
     this.renderTodoList();
   }
 
   _createClass(TodoListView, [{
+    key: "setDeleteItemHandler",
+    value: function setDeleteItemHandler(func) {
+      this.deleteItemHandler = func;
+    }
+  }, {
     key: "renderTodoList",
     value: function renderTodoList() {
+      var _this2 = this;
+
       // first remove all todo items
       var container = document.getElementById("todolist");
 
@@ -277,12 +301,17 @@ function () {
 
 
       for (var i = 0; i < this.model.todoListe.length; i++) {
-        var todoItem = this.model.todoListe[i]; // newtodo is a li with a span with text 
-
+        var todoItem = this.model.todoListe[i];
         var newTodoEntry = document.createElement("li");
         var spanNode = document.createElement("span");
         spanNode.appendChild(document.createTextNode(todoItem.text));
-        newTodoEntry.appendChild(spanNode); // add the new todo entry to the list
+        newTodoEntry.appendChild(spanNode);
+        var deleteButton = document.createElement("button");
+        deleteButton.appendChild(document.createTextNode(" - "));
+        deleteButton.addEventListener("click", function () {
+          return _this2.deleteItemHandler(todoItem);
+        });
+        newTodoEntry.appendChild(deleteButton); // add the new todo entry to the list
 
         container.appendChild(newTodoEntry);
       }
@@ -335,7 +364,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51178" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63774" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
