@@ -1,0 +1,13 @@
+{
+  "name": "todo-mvc",
+  "version": "1.0.0",
+  "description": "todo-mvc",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "dependencies": {
+    "main.css": "^2.0.0",
+    "parcel-bundler": "^1.12.4"
+  }
+}
